@@ -18,15 +18,17 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        // Adiciona SignalR
         services.AddSignalR();
 
         // Configuração do CORS
         services.AddCors(options =>
         {
             options.AddPolicy("AllowAll",
-                builder => builder.AllowAnyOrigin()
-                                  .AllowAnyMethod()
-                                  .AllowAnyHeader());
+                builder => builder
+                    .AllowAnyOrigin() // Permite qualquer origem (React, etc.)
+                    .AllowAnyMethod() // Permite qualquer método HTTP
+                    .AllowAnyHeader()); // Permite qualquer cabeçalho
         });
 
         // Configuração do Serilog
@@ -45,12 +47,17 @@ public class Startup
             app.UseDeveloperExceptionPage();
         }
 
+        // Redireciona para HTTPS (opcional, remova se não estiver usando HTTPS)
+        app.UseHttpsRedirection();
+
         app.UseRouting();
 
+        // Aplica a política de CORS
         app.UseCors("AllowAll");
 
         app.UseAuthorization();
 
+        // Mapeia o endpoint do SignalR
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapHub<ChatHub>("/chathub");
