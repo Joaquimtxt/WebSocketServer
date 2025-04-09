@@ -14,12 +14,6 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog();
 
-// Configuração do Kestrel para usar a porta definida no appsettings.json
-builder.WebHost.UseKestrel(options =>
-{
-    options.ListenAnyIP(4001); // Porta definida no appsettings.json
-});
-
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -47,11 +41,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors("AllowAll");
-
 app.UseHttpsRedirection();
 
-app.UseCors("AllowSpecificOrigin");
+app.UseCors("AllowAll");
 
 app.UseAuthorization();
 
